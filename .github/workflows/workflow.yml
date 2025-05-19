@@ -27,12 +27,12 @@ jobs:
         run: chmod +x gradlew
 
       - name: gradlew 빌드
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v4
         with:
           arguments: build
 
       - name: 빌드된 아티팩트 업로드
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: BackEnd
           path: build/libs/*.jar
@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: 아티팩트 다운로드
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: BackEnd
           path: build/libs/
