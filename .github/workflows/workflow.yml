@@ -57,10 +57,10 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           password: ${{ secrets.EC2_PASSWORD }}
-          port: ${{ secrets.EC2_SSH_PORT }}
+          port: 22
           timeout: 60s
           script: |
             sudo docker stop ${{ secrets.DOCKER_IMAGENAME }}
             sudo docker rm ${{ secrets.DOCKER_IMAGENAME }}
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}
-            sudo docker run -it -d --network host --name ${{ secrets.DOCKER_IMAGENAME }} -e TZ=Asia/Seoul ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}  
+            sudo docker run -it -d --network host --name ${{ secrets.DOCKER_IMAGENAME }} -e TZ=Asia/Seoul ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}
