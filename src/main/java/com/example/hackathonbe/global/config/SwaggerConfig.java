@@ -14,7 +14,7 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI swagger() {
-        Info info = new Info().title("SMP Project").description("UMC 8기 SMP Project Swagger").version("0.0.1");
+        Info info = new Info().title("Project").description("Project Swagger").version("0.0.1");
 
         String securityScheme = "JWT TOKEN";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(securityScheme);

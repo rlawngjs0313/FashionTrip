@@ -1,4 +1,5 @@
-name: CI/CD Pipeline
+# 도커 O
+name: CI/CD PipeLine (Docker)
 
 on:
   push:
@@ -27,41 +28,38 @@ jobs:
       - name: gradlew 실행 권한 부여
         run: chmod +x gradlew
 
-      - name: gradlew 빌드
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: build
+      - name: gradle 세팅
+        uses: gradle/actions/setup-gradle@v4
 
-      - name: 빌드된 아티팩트 업로드
-        uses: actions/upload-artifact@v4
+      - name: gradle 빌드
+        run: ./gradlew clean build -x test
+
+      - name: Docker 이미지 빌드
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGENAME }} .
+
+      - name: Docker Hub 로그인
+        uses: docker/login-action@v2
         with:
-          name: BackEnd
-          path: build/libs/*.jar
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: docker 이미지 push
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGENAME }}
 
   deploy:
-    needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: 아티팩트 다운로드
-        uses: actions/download-artifact@v4
+      - name: EC2에 Docker Image 배포
+        uses: appleboy/ssh-action@v0.1.6
         with:
-          name: BackEnd
-          path: build/libs/
-
-      - name: EC2 배포
-        env:
-          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-        run: |
-          echo "$EC2_SSH_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          jar_file=$(find build/libs -name '*.jar' ! -name '*plain.jar' | head -n 1)
-          scp -i private_key.pem -o StrictHostKeyChecking=no "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/BackEnd.jar
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
-            pgrep java | xargs -r kill -15  # 기존에 실행 중인 Java 프로세스 종료
-            sleep 10
-            nohup java -jar /home/$EC2_USERNAME/BackEnd.jar > app.log 2>&1 &  # 새 버전 애플리케이션 실행
-          "
-          rm -f private_key.pem  # 민감한 정보 삭제
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          password: ${{ secrets.EC2_PASSWORD }}
+          port: ${{ secrets.EC2_SSH_PORT }}
+          timeout: 60s
+          script: |
+            sudo docker stop ${{ secrets.DOCKERHUB_IMAGENAME }}
+            sudo docker rm ${{ secrets.DOCKERHUB_IMAGENAME }}
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGENAME }}
+            sudo docker run -it -d --network host --name ${{ secrets.DOCKERHUB_IMAGENAME }} -e TZ=Asia/Seoul ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGENAME }}  
