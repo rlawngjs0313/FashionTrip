@@ -2,7 +2,7 @@
 
 ### ⚙️ 기술 스택
 - Java 17
-- Spring Boot ""
+- Spring Boot 3.4.5
 - Swagger 2.7.0
 
 ### 📋 Commit Message Convention
