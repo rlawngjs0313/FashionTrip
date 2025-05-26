@@ -24,7 +24,8 @@ public class GlobalExceptionHandler {
     // 컨트롤러 메서드에서 @Valid 어노테이션을 사용하여 DTO의 유효성 검사를 수행
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<CustomResponse<Map<String, String>>> handleMethodArgumentNotValidException(
-            MethodArgumentNotValidException ex) {
+            MethodArgumentNotValidException ex
+    ) {
         // 검사에 실패한 필드와 그에 대한 메시지를 저장하는 Map
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
@@ -77,7 +78,8 @@ public class GlobalExceptionHandler {
     // ConstraintViolationException 핸들러
     @ExceptionHandler(ConstraintViolationException.class)
     protected ResponseEntity<CustomResponse<Map<String, String>>> handleConstraintViolationException(
-            ConstraintViolationException ex) {
+            ConstraintViolationException ex
+    ) {
         // 제약 조건 위반 정보를 저장할 Map
         Map<String, String> errors = new HashMap<>();
 
@@ -103,7 +105,9 @@ public class GlobalExceptionHandler {
 
     //애플리케이션에서 발생하는 커스텀 예외를 처리
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<CustomResponse<Void>> handleCustomException(CustomException ex) {
+    public ResponseEntity<CustomResponse<Void>> handleCustomException(
+            CustomException ex
+    ) {
         //예외가 발생하면 로그 기록
         log.warn("[ CustomException ]: {}", ex.getCode().getMessage());
         //커스텀 예외에 정의된 에러 코드와 메시지를 포함한 응답 제공
@@ -117,7 +121,9 @@ public class GlobalExceptionHandler {
 
     // 그 외의 정의되지 않은 모든 예외 처리
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<CustomResponse<String>> handleAllException(Exception ex) {
+    public ResponseEntity<CustomResponse<String>> handleAllException(
+            Exception ex
+    ) {
         log.error("[WARNING] Internal Server Error : {} ", ex.getMessage());
         BaseErrorCode errorCode = GeneralErrorCode.INTERNAL_SERVER_ERROR_500;
         CustomResponse<String> errorResponse = CustomResponse.onFailure(
