@@ -1,4 +1,4 @@
-package com.example.hackathonbe.global.auth.util;
+package com.example.hackathonbe.global.util;
 
 import com.example.hackathonbe.global.apiPayload.CustomResponse;
 import com.example.hackathonbe.global.apiPayload.excpetion.code.BaseCode;

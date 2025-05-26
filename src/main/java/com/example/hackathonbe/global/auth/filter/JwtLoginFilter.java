@@ -7,7 +7,7 @@ import com.example.hackathonbe.global.auth.converter.TokenConverter;
 import com.example.hackathonbe.global.auth.dto.TokenDTO;
 import com.example.hackathonbe.global.auth.exception.code.SecurityErrorCode;
 import com.example.hackathonbe.global.auth.userDetail.CustomUserDetails;
-import com.example.hackathonbe.global.auth.util.HttpResponseUtil;
+import com.example.hackathonbe.global.util.HttpResponseUtil;
 import com.example.hackathonbe.global.auth.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -92,7 +92,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         String refreshToken = jwtUtil.createRefreshToken(user);
 
         // refresh 토큰 유효기간 설정
-        Date TokenExpiration = jwtUtil.getRefreshExpiration(refreshToken);
+        Date TokenExpiration = jwtUtil.getTokenExpiration(refreshToken);
         long exp = TokenExpiration.getTime() - Instant.now().toEpochMilli();
         int maxAge = exp > 0 ? Math.toIntExact(exp / 1000) : 0;
 

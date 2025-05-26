@@ -3,7 +3,7 @@ package com.example.hackathonbe.global.auth.filter;
 import com.example.hackathonbe.domain.user.exception.UserException;
 import com.example.hackathonbe.global.auth.exception.code.SecurityErrorCode;
 import com.example.hackathonbe.global.auth.userDetail.CustomUserDetailsService;
-import com.example.hackathonbe.global.auth.util.HttpResponseUtil;
+import com.example.hackathonbe.global.util.HttpResponseUtil;
 import com.example.hackathonbe.global.auth.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

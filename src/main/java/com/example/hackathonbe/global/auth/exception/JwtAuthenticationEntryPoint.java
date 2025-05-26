@@ -1,8 +1,7 @@
 package com.example.hackathonbe.global.auth.exception;
 
 import com.example.hackathonbe.global.auth.exception.code.SecurityErrorCode;
-import com.example.hackathonbe.global.auth.util.HttpResponseUtil;
-import jakarta.servlet.ServletException;
+import com.example.hackathonbe.global.util.HttpResponseUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
@@ -19,7 +18,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             HttpServletRequest request,
             HttpServletResponse response,
             AuthenticationException authException
-    ) throws IOException, ServletException {
+    ) throws IOException {
 
         SecurityErrorCode code = SecurityErrorCode.UNAUTHORIZED;
         HttpResponseUtil.setErrorResponse(response, code, null);
